@@ -16,6 +16,7 @@ body {
 
 .calculator_container {
     background-color: #080118;
+    background-color: #110B2C;
     padding: 15px 20px 15px 15px;
     border-radius: 15px;
 }
@@ -45,7 +46,7 @@ body {
     width: 290px;
     border: none;
     outline: none;
-    background-color: #080118;
+    background-color: #110B2C;
     color: #fff;
 }
 
@@ -65,6 +66,8 @@ body {
     padding: 17px;
     user-select: none;
     cursor: pointer;
+    border-radius: 50%;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .calculator_container .calculator_buttons .divide_btn,
@@ -75,7 +78,6 @@ body {
     font-family: 'Font Awesome 6 Free';
     background-color: #fff;
     color: #080118;
-    border-radius: 50%;
 }
 
 .calculator_container .calculator_buttons .correct_btn {
@@ -113,6 +115,5 @@ body {
     .calculator_container .calculator_buttons button {
         font-size: 1.3rem;
         padding: 20px 10px;
-        /* border: 2px solid white; */
     }
 }
