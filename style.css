@@ -51,11 +51,16 @@ body {
 }
 
 .calculator_container .calculator_buttons {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    column-gap: 20px;
+    display: flex;
+    flex-direction: column;
     row-gap: 20px;
 }
+
+.calculator_container .calculator_buttons .row {
+    display: flex;
+    justify-content: space-between;
+}
+    
 
 .calculator_container .calculator_buttons button {
     background: transparent;
@@ -67,14 +72,11 @@ body {
     user-select: none;
     cursor: pointer;
     border-radius: 50%;
-  -webkit-tap-highlight-color: transparent;
+    -webkit-tap-highlight-color: transparent;
+    width: 60px;
 }
 
-.calculator_container .calculator_buttons .divide_btn,
-.calculator_container .calculator_buttons .multiply_btn,
-.calculator_container .calculator_buttons .minus_btn,
-.calculator_container .calculator_buttons .plus_btn,
-.calculator_container .calculator_buttons .equals_btn {
+.calculator_container .calculator_buttons .operator {
     font-family: 'Font Awesome 6 Free';
     background-color: #fff;
     color: #080118;
@@ -84,12 +86,17 @@ body {
     font-family: 'Font Awesome 6 Free';
 }
 
-.calculator_container .calculator_buttons .equals_btn {
-    background-color: #f58c36;
+.calculator_container .calculator_buttons .operator,
+.calculator_container .calculator_buttons .decimal_point_btn {
+    font-weight: bold;
 }
 
-.zero_btn {
-    grid-column: span 2;
+.calculator_container .calculator_buttons .decimal_point_btn {
+    font-size: 1.5rem;
+}
+
+.calculator_container .calculator_buttons .equals_btn {
+    background-color: #f58c36;
 }
 
 @media screen and (max-width: 450px) {
