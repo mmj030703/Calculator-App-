@@ -128,6 +128,10 @@ const equals = () => {
         answer = formatAnswer(num1 * num2);
     }
     else if(operator === operations[1]) {
+        if(num2 === 0) {
+            alert('Cannot Divide by 0.');
+            return true;
+        }
         answer = formatAnswer(num1 / num2);
     }
     else if(operator === operations[0]) {
@@ -174,7 +178,7 @@ numberButtons.forEach((button) => {
 
 operationButtons.forEach((button) => {
     button.addEventListener('click', (eventObj) => {
-        let decimalPointError = false;
+        let error = false;
         //* Corner Case
         //* if there is nothing on display than we avoid putting operators first
         if(expression.length === 0) {
@@ -187,7 +191,7 @@ operationButtons.forEach((button) => {
             expression += clickedItem.textContent;
         }
         if(clickedItem.matches('.equals_btn')) {
-            decimalPointError = equals();
+            error = equals();
         }
         if(clickedItem.matches('.clear_display_btn')) {
             clearDisplay();
@@ -198,7 +202,7 @@ operationButtons.forEach((button) => {
 
         //* Corner Case
         //* check that second last value is operator and the last value also then remove second last as we will have the recent operator and to avoid multiple operators on display. 
-        if(!decimalPointError && operations.includes(expression[expression.length-2])) {
+        if(!error && operations.includes(expression[expression.length-2])) {
             expression = expression.substring(0, expression.length-2) + expression.substring(expression.length-1);
         }
 
