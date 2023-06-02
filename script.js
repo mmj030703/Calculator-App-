@@ -1,30 +1,37 @@
 //* Number buttons
-const zeroBtn = document.querySelector('.zero_btn');
-const oneBtn = document.querySelector('.one_btn');
-const twoBtn = document.querySelector('.two_btn');
-const threeBtn = document.querySelector('.three_btn');
-const fourBtn = document.querySelector('.four_btn');
-const fiveBtn = document.querySelector('.five_btn');
-const sixBtn = document.querySelector('.six_btn');
-const sevenBtn = document.querySelector('.seven_btn');
-const eightBtn = document.querySelector('.eight_btn');
-const nineBtn = document.querySelector('.nine_btn');
-const decimalPointBtn = document.querySelector('.decimal_point_btn'); 
-const numberButtons = [zeroBtn, oneBtn, twoBtn, threeBtn, fourBtn, fiveBtn, sixBtn, sevenBtn, eightBtn, nineBtn, decimalPointBtn];
+const numberButtons = [
+        document.querySelector('.double_zero_btn'), 
+        document.querySelector('.zero_btn'), 
+        document.querySelector('.one_btn'), 
+        document.querySelector('.two_btn'), 
+        document.querySelector('.three_btn'), 
+        document.querySelector('.four_btn'), 
+        document.querySelector('.five_btn'),
+        document.querySelector('.six_btn'),
+        document.querySelector('.seven_btn'),
+        document.querySelector('.eight_btn'),
+        document.querySelector('.nine_btn'),
+        document.querySelector('.decimal_point_btn')
+    ];
 
 //* Operation buttons
-const percentBtn = document.querySelector('.percent_btn');
-const divideBtn = document.querySelector('.divide_btn');
-const multiplyBtn = document.querySelector('.multiply_btn');
-const minusBtn = document.querySelector('.minus_btn');
-const addBtn = document.querySelector('.plus_btn');
-const equalsBtn = document.querySelector('.equals_btn');
-const operationButtons = [percentBtn, divideBtn, multiplyBtn, minusBtn, addBtn];
-const operations = ['%', '/', 'x', '-', '+'];
-
-//* Clear Display Buttons
-const clearDisplayBtn = document.querySelector('.clear_display_btn');
-const correctBtn = document.querySelector('.correct_btn');
+const operationButtons = [
+        document.querySelector('.percent_btn'), 
+        document.querySelector('.divide_btn'), 
+        document.querySelector('.multiply_btn'), 
+        document.querySelector('.minus_btn'), 
+        document.querySelector('.plus_btn'),
+        document.querySelector('.equals_btn'),
+        document.querySelector('.clear_display_btn'),
+        document.querySelector('.correct_btn')
+    ];
+const operations = [
+        operationButtons[0].textContent, 
+        operationButtons[1].textContent, 
+        operationButtons[2].textContent, 
+        operationButtons[3].textContent, 
+        operationButtons[4].textContent
+    ];
 
 //* Display Button
 const calculatorDisplay = document.querySelector('.expression');
@@ -37,7 +44,7 @@ const displayExpression = () => {
         calculatorDisplay.value = expression;
     }
     else {
-        calculatorDisplay.value = '0';
+        calculatorDisplay.value = '';
     }
 };
 
@@ -45,6 +52,7 @@ const displayAnswer = () => {
     calculatorDisplay.value = answer;
 };
 
+//* Adds the number clicked by the user to display.
 const addToDisplay = (button) => {
     expression += button.textContent;
     displayExpression();
@@ -53,104 +61,147 @@ const addToDisplay = (button) => {
 const clearDisplay = () => {
     expression = '';
     answer = '';
-    calculatorDisplay.value = 0;
+    calculatorDisplay.value = '';
 };
+
+//* Clears one character from expression
+const correct = () => {
+    if(expression.length > 0) {
+        expression = expression.slice(0, expression.length-1); //* can use substring also
+    }
+    displayExpression();
+}
+
+//* Called when equals button is clicked.
+const equals = () => {
+    let num1 = '';
+    let num2 = '';
+    let operator = '';
+    let pointCounter = 0;
+    let i;
+
+    //* Evaluating num1 from expression
+    for(i = 0; i < expression.length; i++) {
+        let charCode = expression.charCodeAt(i);
+        if((charCode < 48 || charCode > 57) && (charCode !== 46)) {
+            break;
+        }
+        if(charCode === 46) {
+            pointCounter++;
+        }
+        if(pointCounter > 1) {
+            alert('Invalid Syntax.');
+            return true;
+        }
+        num1 += expression[i];
+    }
+
+    //* Evaluating operator from expression
+    operator += expression[i];
+    pointCounter = 0;
+
+    //* Evaluating num2 from expression
+    for(i = i+1; i < expression.length; i++) {
+        let charCode = expression.charCodeAt(i);
+        if(charCode === 46) {
+            pointCounter++;
+        }
+        if(pointCounter > 1) {
+            alert('Invalid Syntax.');
+            return true;
+        }
+        num2 += expression[i];
+    }
+
+    //* Converting num1 & num2 to Number as they were declared as String
+    num1 = Number(num1);
+    num2 = Number(num2);
+
+    //* Checking which operation is to be performed
+    if(operator === operations[4]) {
+        answer = formatAnswer(num1 + num2);
+    }
+    else if(operator === operations[3]) {
+        answer = formatAnswer(num1 - num2);
+    }
+    else if(operator === operations[2]) {
+        answer = formatAnswer(num1 * num2);
+    }
+    else if(operator === operations[1]) {
+        answer = formatAnswer(num1 / num2);
+    }
+    else if(operator === operations[0]) {
+        answer = formatAnswer(num1 % num2);
+    }
+
+    displayAnswer();
+
+    //* answer is number and expression is string.
+    expression = answer.toString();
+};
+
+//* Called when calculating answer
+const formatAnswer = (answer) => {
+    const newAnswer = answer.toString();
+    const pointIndex = newAnswer.indexOf('.');
+    //* length of newAnswer after decimal point eg: newAnswer = "123.4453" then newAnswerLength = 4
+    const newAnswerLength = newAnswer.substring(pointIndex+1).length;
+    //* pointIndex = -1 when there is no point in newAnswer
+    if(newAnswerLength <= 3 || pointIndex === -1) {     
+        return Number(newAnswer);
+    }
+    else if(newAnswerLength > 3) {
+        return Number(newAnswer).toFixed(3);
+    }
+}
 
 numberButtons.forEach((button) => {
     button.addEventListener('click', () => {
+        //* Corner Case
+        //* if there is nothing on display than we avoid putting the following characters first
+        if(button.textContent === '00' && expression.length === 0) {
+            return
+        }
+        if(button.textContent === '0' && expression.length === 0) {
+            return
+        }
+        if(button.textContent === '.' && expression.length === 0) {
+            return
+        }
         addToDisplay(button);
     });
 });
 
 operationButtons.forEach((button) => {
     button.addEventListener('click', (eventObj) => {
+        let decimalPointError = false;
+        //* Corner Case
         //* if there is nothing on display than we avoid putting operators first
         if(expression.length === 0) {
             return;
         }
+
         const clickedItem = eventObj.target;
-        if(clickedItem.matches('.percent_btn')) {
-            expression += '%';
+        //* adding the clicked operator to expression
+        if(operations.includes(clickedItem.textContent)) {
+            expression += clickedItem.textContent;
         }
-        if(clickedItem.matches('.divide_btn')) {
-            expression += '/';
+        if(clickedItem.matches('.equals_btn')) {
+            decimalPointError = equals();
         }
-        if(clickedItem.matches('.multiply_btn')) {
-            expression += 'x';
+        if(clickedItem.matches('.clear_display_btn')) {
+            clearDisplay();
         }
-        if(clickedItem.matches('.minus_btn')) {
-            expression += '-';
+        if(clickedItem.matches('.correct_btn')) {
+            correct();
         }
-        if(clickedItem.matches('.plus_btn')) {
-            expression += '+';
-        }
-        //* check that second last value is operator and the last value also then remote second last as we will have the recent operator and to avoid multiple operators on display. 
-        if(operations.includes(expression[expression.length-2])) {
+
+        //* Corner Case
+        //* check that second last value is operator and the last value also then remove second last as we will have the recent operator and to avoid multiple operators on display. 
+        if(!decimalPointError && operations.includes(expression[expression.length-2])) {
             expression = expression.substring(0, expression.length-2) + expression.substring(expression.length-1);
         }
+
         displayExpression();
     });
-});
-
-correctBtn.addEventListener('click', () => {
-    if(expression.length > 0) {
-        expression = expression.slice(0, expression.length-1);
-    }
-    displayExpression();
-});
-
-clearDisplayBtn.addEventListener('click', clearDisplay);
-
-equalsBtn.addEventListener('click', () => {
-    console.log(expression);
-    let num1 = '';
-    let num2 = '';
-    let operator = '';
-    let pointCounter = 1;
-    let pointIndex = 0;
-    let i = 0;
-    for(i = 0; i < expression.length; i++) {
-        if((expression.charCodeAt(i) < 48 || expression.charCodeAt(i) > 57) && (expression.charCodeAt(i) !== 46)) {
-            break;
-        }
-        if(expression.charCodeAt(i) === 46) {
-            pointCounter++;
-        }
-        num1 += expression[i];
-    }
-    operator += expression[i];
-    pointCounter = 0;
-    for(i = i+1; i < expression.length; i++) {
-        num2 += expression[i];
-        if(pointCounter > 1) {
-            break;
-        }
-        if(expression.charCodeAt(i) === 46) {
-            pointCounter++;
-        }
-    }
-    num1 = Number(num1);
-    num2 = Number(num2);
-    console.log(num1);
-    console.log(num2);
-    if(operator === '+') {
-        answer = Number(num1 + num2).toFixed(3);
-    }
-    else if(operator === '-') {
-        answer = (num1 - num2).toFixed(3);
-        console.log('num1 - num2 : ', answer);
-    }
-    else if(operator === 'x') {
-        answer = (num1 * num2).toFixed(3);
-    }
-    else if(operator === '/') {
-        answer = (num1 / num2).toFixed(3);
-    }
-    else if(operator === '%') {
-        answer = num1 % num2;
-    }
-    displayAnswer();
-    //* answer is number and expression is string.
-    expression = answer.toString();
-    console.log('expression : ', expression);
 });
